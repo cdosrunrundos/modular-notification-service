@@ -1,0 +1,15 @@
+## Carpetas de compilación de .NET
+[Bb]in/
+[Oo]bj/
+
+## Archivos de configuración de IDEs
+.vs/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## Archivos del sistema operativo
+Thumbs.db
+.DS_Store
