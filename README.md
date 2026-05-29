@@ -6,11 +6,11 @@ Este repositorio contiene la implementación evolutiva de un Servicio de Notific
 
 Este software no pretende ser un **boilerplate** listo para producción, ni una librería. Simplemente es una práctica en donde:
 
-1- Se introduce un requerimiento de negocio o una restricción técnica.
-2- Se analiza el impacto y la fricción sobre el diseño anterior.
-3- Se refactoriza el código aplicando principios de diseño específicos (SOLID, KISS, YAGNI, DRY, Clean Architecture, etc.).
-4- Se documenta la justificación técnica mediante un ADR.
-5- Se aplica la técnica Baseline Commit para estructurar la transición entre capítulos.
+1- Se introduce un requerimiento de negocio o una restricción técnica.  
+2- Se analiza el impacto y la fricción sobre el diseño anterior.  
+3- Se refactoriza el código aplicando principios de diseño específicos (SOLID, KISS, YAGNI, DRY, Clean Architecture, etc.).  
+4- Se documenta la justificación técnica mediante un ADR.  
+5- Se aplica la técnica Baseline Commit para estructurar la transición entre capítulos.  
 
 ## Glosario Técnico
 
