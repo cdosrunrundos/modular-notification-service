@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ModularNotificationService.Cap2.Contracts; // Corregido: apunta al contrato actual
+using ModularNotificationService.Cap2.Contracts; 
 
 namespace ModularNotificationService.Cap2.UseCases
 {
