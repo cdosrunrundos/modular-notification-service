@@ -1,33 +1,33 @@
-﻿
-
+﻿using System;
+using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
+using ModularNotificationService.Cap2.Contracts; // Corregido
 
-namespace ModularNotificationService._01.Services
+namespace ModularNotificationService.Cap2.Services // Corregido
 {
-    public class EmailService
+    public class EmailService : INotificationChannel // Corregido
     {
-        public async Task SendWelcomeEmailAsync(string email, string name)
+        // Firma adaptada al contrato genérico de canales
+        public async Task SendAsync(string recipient, string messageText)
         {
-            // Construir el mensaje
             var message = new MimeMessage();
 
             var fromAddress = Environment.GetEnvironmentVariable("SMTP_SENDER_EMAIL") ?? "no-reply@example.com";
             var fromName = Environment.GetEnvironmentVariable("SMTP_SENDER_NAME") ?? "No Reply";
 
             message.From.Add(new MailboxAddress(fromName, fromAddress));
-            message.To.Add(new MailboxAddress(name, email));
-            message.Subject = "Bienvenido";
+            message.To.Add(new MailboxAddress(recipient, recipient)); // Usamos el email como nombre visual temporal
+            message.Subject = "Bienvenido a la plataforma";
 
             var bodyBuilder = new BodyBuilder
             {
-                TextBody = $"Hola {name},\n\nGracias por registrarte.\n\nSaludos,\nEl equipo"
+                TextBody = messageText // Corregido: toma el cuerpo dinámico del caso de uso
             };
 
             message.Body = bodyBuilder.ToMessageBody();
 
-            // Leer configuración SMTP desde variables de entorno
             var host = Environment.GetEnvironmentVariable("SMTP_HOST") ?? "localhost";
             var portStr = Environment.GetEnvironmentVariable("SMTP_PORT") ?? "25";
             var user = Environment.GetEnvironmentVariable("SMTP_USER");
@@ -58,19 +58,19 @@ namespace ModularNotificationService._01.Services
                     await smtp.AuthenticateAsync(user, pass);
                 }
 
-                Console.WriteLine($"[SMTP Client] Enviando email a {name} ({email})...");
+                Console.WriteLine($"[SMTP Client] Enviando email a {recipient}...");
                 await smtp.SendAsync(message);
 
                 await smtp.DisconnectAsync(true);
 
-                Console.WriteLine("[SMTP Client] Correo de bienvenida enviado con éxito.");
+                Console.WriteLine("[SMTP Client] Correo enviado con éxito.");
             }
             catch (Exception ex)
             {
                 Console.Error.WriteLine($"[SMTP Client] Error enviando correo: {ex.Message}");
                 Console.WriteLine("[SMTP Client] Información del email (fallback):");
                 Console.WriteLine($"From: {fromName} <{fromAddress}>");
-                Console.WriteLine($"To: {name} <{email}>");
+                Console.WriteLine($"To: {recipient}");
                 Console.WriteLine($"Subject: {message.Subject}");
                 Console.WriteLine($"Body: {bodyBuilder.TextBody}");
             }

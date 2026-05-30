@@ -1,27 +1,47 @@
-﻿
-using ModularNotificationService._01.Services;
+﻿using System;
+using System.Threading.Tasks;
+using ModularNotificationService.Cap2.Contracts; // Corregido: apunta al contrato actual
 
-namespace ModularNotificationService._01.UseCases
+namespace ModularNotificationService.Cap2.UseCases
 {
-    public record RegisterUserInput(string Name, string Email);
+    public record RegisterUserInput(string Name, string Email, string DeviceToken, string PhoneNumber, string Origin, bool IsVip);
+
     public class RegisterUser
     {
-        private readonly EmailService _emailService;
-        public RegisterUser()
+        private readonly INotificationChannel _emailChannel;
+        private readonly INotificationChannel _pushChannel;
+        private readonly INotificationChannel _smsChannel;
+
+        public RegisterUser(
+            INotificationChannel emailChannel, 
+            INotificationChannel pushChannel, 
+            INotificationChannel smsChannel)
         {
-            _emailService = new EmailService();
+            _emailChannel = emailChannel;
+            _pushChannel = pushChannel;
+            _smsChannel = smsChannel;
         }
 
         public async Task ExecuteAsync(RegisterUserInput input)
         {
-            if (string.IsNullOrWhiteSpace(input.Email) || string.IsNullOrWhiteSpace(input.Name))
+            Console.WriteLine($"\n[UseCase] Procesando registro de {input.Name}...");
+
+            // 1. Regla por canal de Origen
+            if (input.Origin.Equals("Web", StringComparison.OrdinalIgnoreCase))
             {
-                throw new ArgumentException("Datos de registro inválidos.");
+                // Pasamos el mail como destino y el mensaje construido por el caso de uso
+                await _emailChannel.SendAsync(input.Email, $"Bienvenido a la plataforma web, {input.Name}!");
+            }
+            else if (input.Origin.Equals("Mobile", StringComparison.OrdinalIgnoreCase))
+            {
+                await _pushChannel.SendAsync(input.DeviceToken, $"¡Tu cuenta ha sido creada desde la App, {input.Name}!");
             }
 
-            Console.WriteLine($"[UseCase] Registrando al usuario {input.Name} en la base de datos...");
-
-            await _emailService.SendWelcomeEmailAsync(input.Email, input.Name);
+            // 2. Regla Transversal de Negocio: Condición VIP
+            if (input.IsVip)
+            {
+                await _smsChannel.SendAsync(input.PhoneNumber, $"[ALERTA VIP] {input.Name}, tu registro prioritario fue confirmado.");
+            }
         }
     }
 }
