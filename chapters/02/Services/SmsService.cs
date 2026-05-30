@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using ModularNotificationService.Cap2.Contracts; // Corregido: Namespace e interfaz añadidos
+using ModularNotificationService.Cap2.Contracts; 
 
 namespace ModularNotificationService.Cap2.Services
 {

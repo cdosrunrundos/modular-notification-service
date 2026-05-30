@@ -3,13 +3,13 @@ using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
-using ModularNotificationService.Cap2.Contracts; // Corregido
+using ModularNotificationService.Cap2.Contracts; 
 
-namespace ModularNotificationService.Cap2.Services // Corregido
+namespace ModularNotificationService.Cap2.Services 
 {
-    public class EmailService : INotificationChannel // Corregido
+    public class EmailService : INotificationChannel 
     {
-        // Firma adaptada al contrato genérico de canales
+        
         public async Task SendAsync(string recipient, string messageText)
         {
             var message = new MimeMessage();
@@ -18,12 +18,12 @@ namespace ModularNotificationService.Cap2.Services // Corregido
             var fromName = Environment.GetEnvironmentVariable("SMTP_SENDER_NAME") ?? "No Reply";
 
             message.From.Add(new MailboxAddress(fromName, fromAddress));
-            message.To.Add(new MailboxAddress(recipient, recipient)); // Usamos el email como nombre visual temporal
+            message.To.Add(new MailboxAddress(recipient, recipient)); 
             message.Subject = "Bienvenido a la plataforma";
 
             var bodyBuilder = new BodyBuilder
             {
-                TextBody = messageText // Corregido: toma el cuerpo dinámico del caso de uso
+                TextBody = messageText 
             };
 
             message.Body = bodyBuilder.ToMessageBody();
